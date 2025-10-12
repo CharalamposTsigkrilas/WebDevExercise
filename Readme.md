@@ -1,46 +1,51 @@
-# Commands
+# Books Collection Web-App with HTML & Javascript
 
-## Install needed modules:
+## Installation & Execution Commands
+
+### 1. Install modules:
+
 ```bash
-npm i
+npm install
 ```
 
----
+### 2. Start backend server:
 
-## Start the program:
-
-### 1. Start backend:
 ```bash
 npm start
 ```
 
-### 2. Open frontend: 'index.html' file in a browser.
+### 3. Open frontend `index.html` file in a browser.
 
 ---
 
-## Access into the database (sqlite3)
+## Usefull database commands (sqlite3)
 
 ### Get into the database:
+
 ```bash
 sqlite3 books.db
 ```
 
-### Create table:
+### Create table (gets created automatically anyway):
+
 ```bash
 CREATE TABLE books(id INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(25) NOT NULL, title VARCHAR(40) NOT NULL, genre VARCHAR(20) NOT NULL, price FLOAT NOT NULL);
 ```
 
-### Drop table:
-```bash
-DROP TABLE books;
-```
-
 ### Print table:
+
 ```bash
 SELECT * books;
 ```
 
-### Delete a row from the table by id:
+### Delete a row from the table by id (replace `<id>`):
+
 ```bash
 DELETE FROM books WHERE id = <id>;
+```
+
+### Drop table:
+
+```bash
+DROP TABLE books;
 ```
