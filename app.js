@@ -49,7 +49,7 @@ async function ensureBooksTable() {
         if (err) {
           reject(err);
         } else if (row) {
-          console.log("Table 'books' already exists.");
+          console.log("Database 'books.db' with table 'books' is ready.");
           resolve();
         } else {
           const createTableQuery =
@@ -146,14 +146,14 @@ app.post("/books", async (req, res) => {
 // Start the server
 // ---------------------
 app.listen(3000, async () => {
-  console.log("Server running on http://localhost:3000");
+  console.log("Server running on http://localhost:3000.");
 
   // Print all books when the app starts
   try {
     await ensureBooksTable();
 
     const books = await getAllBooks();
-    console.log("\nAll saved books in 'books.db':\n", books);
+    console.log("\nAll saved books in database:\n\n", books);
   } catch (err) {
     console.error("Error reading database:", err.message);
   }
