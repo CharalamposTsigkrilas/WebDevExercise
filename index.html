@@ -1,182 +1,170 @@
 <html>
-    <head>
-        <!--A title for the index.html page-->
-        <title>Request for books</title>
 
-        <!--We allow all Greek characters-->
-        <meta charset="utf-8">
-        
-        <!--We edit the style of the page so every text and dropdown list be centered-->
-        <!--Found this at: https://www.computerhope.com/issues/ch001474.htm -->
-        <style>h1{text-align: center;}</style>
-        <style>p{text-align: center;}</style>                 
+<head>
+    <title>Request for books</title>
 
-    </head>
-    <body>
+    <meta charset="utf-8">
 
-        <!--A heading text-->
-        <h1>Book information</h1>
+    <style>
+        h1 {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+        }
+    </style>
 
-        <!--A text input box for author-->
-        <p>Author:<input type="text" id="author"></p>
+</head>
 
-        <!--A text input box for title-->
-        <p>Title:<input type="text" id="title" name="title"></p>
+<body>
 
-        <!--Genre is a dropdown list with options-->
-        <p>Genre:
-            <select name="genre" id="genre">
-                <option value="select" selected disabled>----Select genre----</option>
-                <option value="science fiction">Science fiction</option>
-                <option value="satire">Satire</option>
-                <option value="drama">Drama</option>
-                <option value="action and adventure">Action and Adventure</option>
-                <option value="romance">Romance</option>
-                <option value="mystery">Mystery</option>
-                <option value="horror">Horror</option>
-            </select>
-        </p>
-            
-        <!--A number (text) input box for price-->
-        <p>Price(€):<input type="number" min="0" id="price" name="price"></p>
+    <!-- Form for book creation-->
+    <h1>Book Information</h1>
 
-        <!--After the inputs we have a button-->
-        <p><input type="button" id="addButton" value="Add book"></p>
+    <p>Author:<input type="text" id="author"></p>
+    <p>Title:<input type="text" id="title" name="title"></p>
+    <p>Genre:
+        <select name="genre" id="genre">
+            <option value="select" selected disabled>----Select genre----</option>
+            <option value="science fiction">Science fiction</option>
+            <option value="satire">Satire</option>
+            <option value="drama">Drama</option>
+            <option value="action and adventure">Action and Adventure</option>
+            <option value="romance">Romance</option>
+            <option value="mystery">Mystery</option>
+            <option value="horror">Horror</option>
+        </select>
+    </p>
+    <p>Price (€):<input type="number" min="0" id="price" name="price"></p>
 
-        <!--A heading text-->
-        <h1>Book search</h1>
+    <p><input type="button" id="addButton" value="Add book"></p>
 
-        <!--A text input box for the keyword-->
-        <p>Keyword for books:<input type="text" id="keyword" onkeypress="antiSpace()" name="keyword"></p>
-         
-        <!--After the input we have another button-->
-        <p><input type="button" id="searchButton" value="Search books"></p>
-        
-        <!--Javasript code we need to use inside the .html file in order to call post and get methods. Also we do the rigth checks and cleans.-->
-        <script type="text/javascript">
-        
-            //At the keyword input we don't let the user write more than one word
-            //Found this at: https://stackoverflow.com/questions/32366300/how-prevent-whitespace-in-input-field-with-plain-javascript            
-            function antiSpace(){
-                const searchInput = document.getElementById("keyword");
-                searchInput.addEventListener('keypress', (event) => { 
-                    if (event.keyCode === 32) {
-                        event.preventDefault();
-                    }
-                });
-            }
 
-            //We create a class for books with all the atributes
-            class Book{
-                constructor(id,author,title,genre,price){
-                    this.id = id;
-                    this.author = author;
-                    this.title = title;
-                    this.genre = genre;
-                    this.price = price;
-                }                
-            }
+    <h1>Book search</h1>
 
-            //This part is running when "Add book" button is clicked
-            document.getElementById('addButton').addEventListener('click',async (e)=>{                
-                
-                //We assign all the input into variables
-                //We don't give id a value because it takes by itself and it's auto increased
-                var id;
-                const author = document.getElementById('author').value;
-                const title = document.getElementById('title').value;
-                const genre = document.getElementById('genre').value;
-                const price = document.getElementById('price').value;
+    <p>Keyword for books:<input type="text" id="keyword" onkeypress="antiSpace()" name="keyword"></p>
 
-                //Here checking if all the inputs are given and the price is positive.
-                //If not, an alert message pops up and user must give inputs again.
-                if(author.length === 0 || title.length === 0 || price.length === 0 || genre == "select"){
+    <p><input type="button" id="searchButton" value="Search books"></p>
 
-                    console.log("All fields must be filled!");
-                    alert("All fields must be filled!"); 
 
-                }else if(price<=0){
+    <script type="text/javascript">
 
-                    console.log("Price must be a positive number!");
-                    alert("Price must be a positive number!");    
-
-                }else{
-
-                    //Creating a new Book object with all atributes
-                    const book = new Book(id,author,title,genre,price);
-
-                    //The url we using with POST method and stringify the book object into a JSON
-                    const url = 'http://localhost:3000/books/';
-
-                    const result = await fetch(url,{
-                        method:'POST',
-                        headers: {
-                            "Content-Type":"application/json"
-                        },
-                        body: JSON.stringify(book)
-                    });
-
-                    //Printing the result
-                    console.log(result.json());                 
-                    console.log("Book has been added succesfuly!");
-                    alert("Book has been added succesfuly!");
-
-                    //After the book entry we clear all the textboxes
-                    const inputArray = document.getElementsByTagName('input');
-                    for(input of inputArray){
-                        if(input.type == 'text' || input.type == 'number'){
-                            input.value = '';
-                        }
-                    }
-
-                    //Also we reset the genre to uselected
-                    const dropdown = document.getElementById('genre');                   
-                    dropdown.value ="select";
+        // On keyword input allow only one word        
+        function antiSpace() {
+            const searchInput = document.getElementById("keyword");
+            searchInput.addEventListener('keypress', (event) => {
+                if (event.keyCode === 32) {
+                    event.preventDefault();
                 }
-
             });
+        }
 
-            //This part is running when "Search book" button is clicked
-            document.getElementById('searchButton').addEventListener('click',async (e)=>{
+        // Books model
+        class Book {
+            constructor(id, author, title, genre, price) {
+                this.id = id;
+                this.author = author;
+                this.title = title;
+                this.genre = genre;
+                this.price = price;
+            }
+        }
 
-                //Assign keyword input into a variable
-                const keyword = document.getElementById('keyword').value;
+        // "Add book" button handler
+        document.getElementById('addButton').addEventListener('click', async (e) => {
 
-                //Checking if a keyword is given
-                if(keyword.length === 0){
+            var id;
+            const author = document.getElementById('author').value;
+            const title = document.getElementById('title').value;
+            const genre = document.getElementById('genre').value;
+            const price = document.getElementById('price').value;
 
-                    console.log("No keyword was given!");
-                    alert("No keyword was given!"); 
-                }
+            // Field inputs checks
+            if (author.length === 0 || title.length === 0 || price.length === 0 || genre == "select") {
 
-                //The url we using with GET method
-                const url = `http://localhost:3000/books/${keyword}`;
+                console.log("All fields must be filled!");
+                alert("All fields must be filled!");
 
-                const result = await fetch(url,{
-                    method:'GET',
+            } else if (price <= 0) {
+
+                console.log("Price must be a positive number!");
+                alert("Price must be a positive number!");
+
+            } else {
+
+                // Create a new Book
+                const book = new Book(id, author, title, genre, price);
+
+                // Execute the request
+                const url = 'http://localhost:3000/books';
+
+                const result = await fetch(url, {
+                    method: 'POST',
                     headers: {
-                        "Content-Type":"application/json"
-                    }
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(book)
                 });
-                
-                //Printing the result
+
+                // Print the result
                 console.log(result.json());
+                console.log("Book has been added succesfuly!");
+                alert("Book has been added succesfuly!");
 
-                //A new window with the url opens
-                //Found this at: https://stackoverflow.com/questions/4643958/open-button-in-new-window
-                window.open(url);                  
-
-                //After the keyword entry we clear all the textboxes
+                // Clear all the textboxes after the book entry
                 const inputArray = document.getElementsByTagName('input');
-                for(input of inputArray){
-                    if(input.type == 'text' || input.type == 'number'){
+                for (input of inputArray) {
+                    if (input.type == 'text' || input.type == 'number') {
                         input.value = '';
                     }
                 }
 
+                // Reset the genre to unselected
+                const dropdown = document.getElementById('genre');
+                dropdown.value = "select";
+            }
+
+        });
+
+        // "Search book" button handler
+        document.getElementById('searchButton').addEventListener('click', async (e) => {
+
+            const keyword = document.getElementById('keyword').value;
+
+            // Input check
+            if (keyword.length === 0) {
+                console.log("No keyword was given!");
+                alert("No keyword was given!");
+            }
+
+            // Execute the request
+            const url = `http://localhost:3000/books/${keyword}`;
+
+            const result = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                }
             });
 
-        </script>
+            // Print the result
+            console.log(result.json());
 
-    </body>
+            // A new window opens with the results
+            window.open(url);
+
+            // Clear all the textboxes after the keyword entry 
+            const inputArray = document.getElementsByTagName('input');
+            for (input of inputArray) {
+                if (input.type == 'text' || input.type == 'number') {
+                    input.value = '';
+                }
+            }
+
+        });
+
+    </script>
+
+</body>
+
 </html>
