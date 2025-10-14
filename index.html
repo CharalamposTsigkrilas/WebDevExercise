@@ -4,33 +4,27 @@
     <meta charset="utf-8">
     <title>Book Manager</title>
 
-    <style>
-        h1,
-        div {
-            text-align: center;
-            margin: 20px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
     <h1>Book Management</h1>
 
-    <div>
+    <div class="container">
 
         <!-- Book creation form -->
-        <div>
+        <div class="card">
             <h2>Add a New Book</h2>
-            <div>
+            <div class="form-group">
                 <label for="author">Author</label>
-                <input type="text" id="author">
+                <input type="text" id="author" placeholder="">
             </div>
-            <div>
+            <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" id="title">
             </div>
-            <div>
+            <div class="form-group">
                 <label for="genre">Genre</label>
                 <select id="genre">
                     <option value="select" selected disabled>---- Select genre ----</option>
@@ -43,17 +37,17 @@
                     <option value="horror">Horror</option>
                 </select>
             </div>
-            <div>
+            <div class="form-group">
                 <label for="price">Price (€)</label>
-                <input type="number" min="0" id="price">
+                <input type="number" min="0" placeholder="0.00 €" id="price">
             </div>
             <button id="addButton" class="button">Add Book</button>
         </div>
 
         <!-- Book search form -->
-        <div>
+        <div class="card">
             <h2>Search Books</h2>
-            <div>
+            <div class="form-group">
                 <label for="keyword">Keyword</label>
                 <input type="text" id="keyword" placeholder="Type a keyword..." onkeypress="antiSpace()">
             </div>
@@ -61,6 +55,8 @@
         </div>
 
     </div>
+
+    <footer>© Book Manager WebDev</footer>
 
     <script type="text/javascript">
 
