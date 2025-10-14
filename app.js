@@ -84,7 +84,7 @@ async function getAllBooks() {
 
 // Get books by keyword (search in all fields)
 async function getBooksByKeyword(keyword) {
-  const q = `SELECT * FROM books WHERE title LIKE "%${keyword}%" OR author LIKE "%${keyword}%" OR genre LIKE "%${keyword}%" OR price LIKE "%${keyword}%"`;
+  const q = `SELECT * FROM books WHERE id LIKE "%${keyword}%" OR title LIKE "%${keyword}%" OR author LIKE "%${keyword}%" OR genre LIKE "%${keyword}%" OR price LIKE "%${keyword}%"`;
   const rows = await runQuery(db, q);
 
   return rows.map(
