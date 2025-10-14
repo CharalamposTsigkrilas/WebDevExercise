@@ -45,20 +45,22 @@ async function ensureBooksTable() {
   return new Promise((resolve, reject) => {
     db.get(
       "SELECT name FROM sqlite_master WHERE type='table' AND name='books';",
-      (err, row) => {
+      async (err, row) => {
         if (err) {
           reject(err);
         } else if (row) {
-          console.log("Database 'books.db' with table 'books' is ready.");
+          console.log("\nTable 'books' already exists.");
+          await insertSampleBooks();
           resolve();
         } else {
           const createTableQuery =
             "CREATE TABLE books(id INTEGER PRIMARY KEY AUTOINCREMENT, author VARCHAR(25) NOT NULL, title VARCHAR(40) NOT NULL, genre VARCHAR(20) NOT NULL, price FLOAT NOT NULL);";
-          db.run(createTableQuery, (err) => {
+          db.run(createTableQuery, async (err) => {
             if (err) {
               reject(err);
             } else {
-              console.log("Table 'books' created successfully.");
+              console.log("\nTable 'books' created successfully.");
+              await insertSampleBooks();
               resolve();
             }
           });
@@ -66,6 +68,37 @@ async function ensureBooksTable() {
       }
     );
   });
+}
+
+// ---------------------
+// Insert sample books if table is empty
+// ---------------------
+async function insertSampleBooks() {
+  const query = "SELECT COUNT(*) as count FROM books";
+  const rows = await runQuery(db, query);
+  if (rows[0].count === 0) {
+    console.log("\nNo books found — inserting sample data...");
+    const samples = [
+      new Book(null, "J.K. Rowling", "Harry Potter", "Fantasy", 19.99),
+      new Book(null, "George Orwell", "1984", "Dystopian", 14.5),
+      new Book(null, "J.R.R. Tolkien", "The Hobbit", "Fantasy", 21.0),
+      new Book(
+        null,
+        "Agatha Christie",
+        "Murder on the Orient Express",
+        "Mystery",
+        12.75
+      ),
+    ];
+
+    for (const book of samples) {
+      await addBook(book);
+    }
+
+    console.log("\nSample books inserted successfully.");
+  } else {
+    console.log("\nTable already has data. Skipping sample inserts.");
+  }
 }
 
 // ---------------------
@@ -100,7 +133,9 @@ async function addBook(book) {
       if (err) {
         reject(err);
       } else {
-        resolve({ id: this.lastID });
+        book.id = this.lastID;
+        console.log("\nBook added: ", book);
+        resolve({ id: book.id });
       }
     });
   });
@@ -146,15 +181,15 @@ app.post("/books", async (req, res) => {
 // Start the server
 // ---------------------
 app.listen(3000, async () => {
-  console.log("Server running on http://localhost:3000.");
+  console.log("\nServer running on http://localhost:3000.");
 
   // Print all books when the app starts
   try {
     await ensureBooksTable();
 
     const books = await getAllBooks();
-    console.log("\nAll saved books in database:\n\n", books);
+    console.log("\nBook collection:\n", books);
   } catch (err) {
-    console.error("Error reading database:", err.message);
+    console.error("\nError reading database:", err.message);
   }
 });
